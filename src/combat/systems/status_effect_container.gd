@@ -78,6 +78,13 @@ func get_def_ratio() -> float:
 	return total
 
 
+func get_spd_ratio() -> float:
+	var total: float = 0.0
+	for status: ActiveStatus in _active.values():
+		total += status.effect.spd_ratio
+	return total
+
+
 ## Efeitos com dano por turno (o Combatant calcula e aplica o dano).
 func get_dot_effects() -> Array[StatusEffect]:
 	var result: Array[StatusEffect] = []

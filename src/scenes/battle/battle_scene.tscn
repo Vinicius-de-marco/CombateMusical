@@ -11,12 +11,14 @@
 [ext_resource type="Resource" path="res://src/combat/data/characters/poser_b.tres" id="7_xb6hn"]
 [ext_resource type="PackedScene" uid="uid://ba57n5ig5lx4l" path="res://src/combat/ui/battle_hud.tscn" id="8_3nm8x"]
 [ext_resource type="Resource" uid="uid://b1gt6viwbki1g" path="res://src/combat/data/skills/encore.tres" id="8_vs438"]
-[ext_resource type="Resource" path="res://src/combat/data/characters/bassist.tres" id="9_xb6hn"]
-[ext_resource type="Resource" path="res://src/combat/data/skills/bass_drop.tres" id="10_3nm8x"]
-[ext_resource type="Resource" path="res://src/combat/data/skills/slap_solo.tres" id="11_eqwmx"]
+[ext_resource type="Resource" path="res://src/combat/data/characters/drummer.tres" id="9_drummer"]
+[ext_resource type="Resource" path="res://src/combat/data/skills/kick_drum.tres" id="10_kick"]
+[ext_resource type="Resource" path="res://src/combat/data/skills/fast_tempo.tres" id="11_tempo"]
+[ext_resource type="Resource" path="res://src/combat/data/skills/double_fill.tres" id="12_fill"]
 [ext_resource type="Resource" path="res://src/combat/data/skills/ear_split.tres" id="13_eqwmx"]
 [ext_resource type="Resource" path="res://src/combat/data/skills/heckle.tres" id="15_xh228"]
-[ext_resource type="Script" path="res://src/scenes/battle/stage_background.gd" id="16_stage"]
+[ext_resource type="Script" path="res://src/core/visuals/stage_background.gd" id="16_stage"]
+[ext_resource type="PackedScene" path="res://src/combat/combatants/characters/roadie.tscn" id="17_roadie"]
 
 [node name="BattleScene" type="Node2D" unique_id=1031487829]
 script = ExtResource("1_itldd")
@@ -44,10 +46,10 @@ position = Vector2(180, 130)
 base_stats = ExtResource("4_ift72")
 skills = Array[ExtResource("5_ift72")]([ExtResource("5_2euhs"), ExtResource("7_2euhs"), ExtResource("8_vs438")])
 
-[node name="Bassist" parent="Party" unique_id=252849498 instance=ExtResource("3_rnq5t")]
+[node name="Drummer" parent="Party" unique_id=252849498 instance=ExtResource("3_rnq5t")]
 position = Vector2(150, 210)
-base_stats = ExtResource("9_xb6hn")
-skills = Array[ExtResource("5_ift72")]([ExtResource("10_3nm8x"), ExtResource("11_eqwmx")])
+base_stats = ExtResource("9_drummer")
+skills = Array[ExtResource("5_ift72")]([ExtResource("10_kick"), ExtResource("11_tempo"), ExtResource("12_fill")])
 
 [node name="Enemies" type="Node2D" parent="." unique_id=1414731403]
 
@@ -60,5 +62,8 @@ skills = Array[ExtResource("5_ift72")]([ExtResource("13_eqwmx")])
 position = Vector2(460, 210)
 base_stats = ExtResource("7_xb6hn")
 skills = Array[ExtResource("5_ift72")]([ExtResource("15_xh228")])
+
+[node name="Roadie" parent="Enemies" unique_id=1689314207 instance=ExtResource("17_roadie")]
+position = Vector2(540, 170)
 
 [node name="BattleHUD" parent="." unique_id=1758697881 instance=ExtResource("8_3nm8x")]

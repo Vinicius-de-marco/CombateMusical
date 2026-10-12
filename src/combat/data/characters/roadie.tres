@@ -6,12 +6,12 @@
 [resource]
 script = ExtResource("1_stats")
 display_name = "Roadie"
-max_hp = 80
+max_hp = 150
 max_volume = 100
-starting_volume = 0
-atk = 15
-def = 3
-spd = 6
+starting_volume = 30
+atk = 21
+def = 6
+spd = 5
 crit_rate = 0.05
 crit_multiplier = 1.5
 battle_sprite = ExtResource("2_sprite")

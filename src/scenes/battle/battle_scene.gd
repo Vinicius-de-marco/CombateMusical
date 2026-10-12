@@ -8,6 +8,10 @@ extends Node2D
 
 ## Chance de um inimigo usar skill quando tem Volume para alguma (senão, ataque básico).
 @export_range(0.0, 1.0, 0.05) var enemy_skill_chance: float = 0.6
+## A IA só usa skill de cura se algum alvo estiver abaixo desta fração do HP.
+@export_range(0.0, 1.0, 0.05) var enemy_heal_threshold: float = 0.6
+
+@export_file("*.tscn") var main_menu_scene: String = "res://src/scenes/main_menu/main_menu.tscn"
 
 @export_group("Audio")
 @export var battle_bgm: AudioStream = preload("res://assets/audio/bgm/battle_theme.wav")
@@ -27,7 +31,7 @@ func _ready() -> void:
 	_hud.attack_requested.connect(_on_attack_requested)
 	_hud.skill_requested.connect(_on_skill_requested)
 	_hud.defend_requested.connect(_on_defend_requested)
-	_hud.play_again_requested.connect(_on_play_again_requested)
+	_hud.menu_requested.connect(_on_menu_requested)
 	_hud.quit_requested.connect(_on_quit_requested)
 
 	var heroes: Array[Combatant] = _collect_combatants(_party, Combatant.Team.PLAYER)
@@ -88,7 +92,7 @@ func _run_enemy_turn(enemy: Combatant) -> void:
 func _try_enemy_skill(enemy: Combatant, target: Combatant) -> bool:
 	var usable: Array[SkillData] = []
 	for skill: SkillData in enemy.skills:
-		if enemy.can_use_skill(skill) and _is_worth_using(skill, target):
+		if enemy.can_use_skill(skill) and _is_worth_using(enemy, skill, target):
 			usable.append(skill)
 	if usable.is_empty() or randf() >= enemy_skill_chance:
 		return false
@@ -101,13 +105,20 @@ func _try_enemy_skill(enemy: Combatant, target: Combatant) -> bool:
 	return true
 
 
-## Evita desperdício: skill só de status não vale se o alvo já tem todos os efeitos dela.
-func _is_worth_using(skill: SkillData, target: Combatant) -> bool:
-	if skill.deals_damage() or skill.heals():
+## Evita desperdício: cura só se alguém precisa; status só se algum alvo ainda não tem.
+## Skill que cura é guardada para HP baixo mesmo que também dê buff (ex.: Silver Tape).
+func _is_worth_using(user: Combatant, skill: SkillData, chosen: Combatant) -> bool:
+	if skill.deals_damage():
 		return true
-	for effect: StatusEffect in skill.applies_effects:
-		if effect != null and not target.has_status(effect.id):
-			return true
+	var targets: Array[Combatant] = _resolve_targets(user, skill, chosen)
+	for target: Combatant in targets:
+		if skill.heals():
+			if target.stats.current_hp < target.stats.max_hp * enemy_heal_threshold:
+				return true
+			continue
+		for effect: StatusEffect in skill.applies_effects:
+			if effect != null and not target.has_status(effect.id):
+				return true
 	return false
 
 
@@ -170,6 +181,8 @@ func _resolve_targets(user: Combatant, skill: SkillData, chosen: Combatant) -> A
 			return _opponents_of(user)
 		SkillData.TargetType.SELF:
 			return [user]
+		SkillData.TargetType.ALL_ALLIES:
+			return _allies_of(user)
 		_:
 			# Array tipado explícito: o ternário com literais gera Array sem tipo.
 			var single: Array[Combatant] = []
@@ -181,6 +194,11 @@ func _resolve_targets(user: Combatant, skill: SkillData, chosen: Combatant) -> A
 func _opponents_of(combatant: Combatant) -> Array[Combatant]:
 	var enemy_team: Combatant.Team = Combatant.Team.ENEMY if combatant.team == Combatant.Team.PLAYER else Combatant.Team.PLAYER
 	return _turn_manager.get_living(enemy_team)
+
+
+## Inclui o próprio combatente.
+func _allies_of(combatant: Combatant) -> Array[Combatant]:
+	return _turn_manager.get_living(combatant.team)
 
 
 func _on_defend_requested() -> void:
@@ -219,11 +237,10 @@ func _on_battle_ended(victory: bool) -> void:
 	AudioManager.play_sfx(victory_sfx if victory else defeat_sfx)
 
 
-func _on_play_again_requested() -> void:
-	get_tree().reload_current_scene()
+func _on_menu_requested() -> void:
+	get_tree().change_scene_to_file(main_menu_scene)
 
 
-## Por enquanto fecha o jogo; quando existir menu principal, troca de cena aqui.
 func _on_quit_requested() -> void:
 	get_tree().quit()
 

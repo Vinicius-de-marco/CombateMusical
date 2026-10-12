@@ -12,6 +12,8 @@ extends Resource
 ## +0.3 = +30% de ATK; -0.4 = -40%.
 @export_range(-1.0, 2.0, 0.05) var atk_ratio: float = 0.0
 @export_range(-1.0, 2.0, 0.05) var def_ratio: float = 0.0
+## Muda a iniciativa a partir da próxima rodada (a ordem é montada no início dela).
+@export_range(-1.0, 2.0, 0.05) var spd_ratio: float = 0.0
 ## Dano no início de cada turno, como fração do max_hp (mínimo 1).
 @export_range(0.0, 1.0, 0.01) var dot_ratio: float = 0.0
 
@@ -20,4 +22,4 @@ extends Resource
 
 
 func is_harmful() -> bool:
-	return atk_ratio < 0.0 or def_ratio < 0.0 or dot_ratio > 0.0
+	return atk_ratio < 0.0 or def_ratio < 0.0 or spd_ratio < 0.0 or dot_ratio > 0.0

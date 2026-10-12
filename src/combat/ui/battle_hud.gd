@@ -7,7 +7,7 @@ signal attack_requested(target: Combatant)
 ## target é null quando a skill não pede seleção (ALL_ENEMIES / SELF).
 signal skill_requested(skill: SkillData, target: Combatant)
 signal defend_requested
-signal play_again_requested
+signal menu_requested
 signal quit_requested
 
 const MAX_LOG_LINES: int = 3
@@ -30,7 +30,7 @@ const MENU_BUTTON_FONT_SIZE: int = 11
 @onready var _cancel_button: Button = %CancelButton
 @onready var _result_panel: Control = %ResultPanel
 @onready var _result_label: Label = %ResultLabel
-@onready var _play_again_button: Button = %PlayAgainButton
+@onready var _menu_button: Button = %MenuButton
 @onready var _quit_button: Button = %QuitButton
 
 var _log_lines: PackedStringArray = []
@@ -48,7 +48,7 @@ func _ready() -> void:
 	_defend_button.pressed.connect(_on_defend_pressed)
 	_skill_back_button.pressed.connect(_show_only.bind(_action_menu, _attack_button))
 	_cancel_button.pressed.connect(_on_cancel_pressed)
-	_play_again_button.pressed.connect(play_again_requested.emit)
+	_menu_button.pressed.connect(menu_requested.emit)
 	_quit_button.pressed.connect(quit_requested.emit)
 	hide_menus()
 	_result_panel.hide()
@@ -105,7 +105,7 @@ func show_result(victory: bool) -> void:
 	hide_menus()
 	_result_label.text = "VITÓRIA!" if victory else "DERROTA..."
 	_result_panel.show()
-	_play_again_button.grab_focus()
+	_menu_button.grab_focus()
 
 
 func _open_skill_menu() -> void:

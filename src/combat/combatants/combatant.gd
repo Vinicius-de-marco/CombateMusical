@@ -205,6 +205,10 @@ func get_effective_def() -> int:
 	return maxi(0, roundi(stats.def * (1.0 + _statuses.get_def_ratio())))
 
 
+func get_effective_spd() -> int:
+	return maxi(1, roundi(stats.spd * (1.0 + _statuses.get_spd_ratio())))
+
+
 # --- Internos -----------------------------------------------------------------
 
 func _can_strike(target: Combatant) -> bool:

@@ -106,9 +106,11 @@ static func _is_active(combatant: Combatant) -> bool:
 	return is_instance_valid(combatant) and combatant.is_alive()
 
 
-## Maior SPD primeiro; empate favorece o time do jogador.
+## Maior SPD efetivo (com status) primeiro; empate favorece o time do jogador.
 ## A fila já é filtrada por _is_active antes de ordenar.
 static func _compare_initiative(a: Combatant, b: Combatant) -> bool:
-	if a.stats.spd != b.stats.spd:
-		return a.stats.spd > b.stats.spd
+	var a_spd: int = a.get_effective_spd()
+	var b_spd: int = b.get_effective_spd()
+	if a_spd != b_spd:
+		return a_spd > b_spd
 	return a.team == Combatant.Team.PLAYER and b.team != Combatant.Team.PLAYER
