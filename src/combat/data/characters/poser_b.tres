@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CombatantStats" format=3 uid="uid://bukoux1o1lmvj"]
+
+[ext_resource type="Script" uid="uid://bg5ypjcq8ehns" path="res://src/combat/data/combatant_stats.gd" id="1_stats"]
+[ext_resource type="Texture2D" uid="uid://d4yw02xji1ax" path="res://assets/sprites/poser.png" id="2_sprite"]
+
+[resource]
+script = ExtResource("1_stats")
+display_name = "Poser B"
+max_hp = 90
+starting_volume = 20
+atk = 12
+def = 4
+spd = 7
+battle_sprite = ExtResource("2_sprite")

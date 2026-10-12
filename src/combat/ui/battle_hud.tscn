@@ -1,0 +1,142 @@
+[gd_scene format=3 uid="uid://ba57n5ig5lx4l"]
+
+[ext_resource type="Script" uid="uid://d0j0ihmms7gtw" path="res://src/combat/ui/battle_hud.gd" id="1_w0b12"]
+
+[node name="BattleHUD" type="CanvasLayer" unique_id=1758697881]
+script = ExtResource("1_w0b12")
+
+[node name="Root" type="Control" parent="." unique_id=771439960]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="TopBar" type="VBoxContainer" parent="Root" unique_id=2048104850]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+grow_horizontal = 2
+
+[node name="TurnLabel" type="Label" parent="Root/TopBar" unique_id=1566259231]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="LogLabel" type="Label" parent="Root/TopBar" unique_id=272404378]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="BottomBar" type="HBoxContainer" parent="Root" unique_id=1556583472]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = -101.0
+offset_right = -4.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 8
+
+[node name="PartyStatusList" type="HBoxContainer" parent="Root/BottomBar" unique_id=1804927944]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 8
+theme_override_constants/separation = 4
+
+[node name="MenuArea" type="VBoxContainer" parent="Root/BottomBar" unique_id=830254970]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+
+[node name="SkillMenu" type="PanelContainer" parent="Root/BottomBar/MenuArea" unique_id=1194211866]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Root/BottomBar/MenuArea/SkillMenu" unique_id=528908351]
+layout_mode = 2
+
+[node name="SkillList" type="VBoxContainer" parent="Root/BottomBar/MenuArea/SkillMenu/VBoxContainer" unique_id=1634085324]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="SkillBackButton" type="Button" parent="Root/BottomBar/MenuArea/SkillMenu/VBoxContainer" unique_id=692611409]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Voltar"
+
+[node name="TargetMenu" type="PanelContainer" parent="Root/BottomBar/MenuArea" unique_id=2025396730]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Root/BottomBar/MenuArea/TargetMenu" unique_id=1633484472]
+layout_mode = 2
+
+[node name="TargetList" type="VBoxContainer" parent="Root/BottomBar/MenuArea/TargetMenu/VBoxContainer" unique_id=1069283153]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="CancelButton" type="Button" parent="Root/BottomBar/MenuArea/TargetMenu/VBoxContainer" unique_id=1442713004]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Voltar"
+
+[node name="ActionMenu" type="PanelContainer" parent="Root/BottomBar/MenuArea" unique_id=536126438]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Root/BottomBar/MenuArea/ActionMenu" unique_id=270892098]
+layout_mode = 2
+
+[node name="AttackButton" type="Button" parent="Root/BottomBar/MenuArea/ActionMenu/VBoxContainer" unique_id=1552434323]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Atacar"
+
+[node name="SkillsButton" type="Button" parent="Root/BottomBar/MenuArea/ActionMenu/VBoxContainer" unique_id=1834352445]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Skills"
+
+[node name="DefendButton" type="Button" parent="Root/BottomBar/MenuArea/ActionMenu/VBoxContainer" unique_id=1057853526]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Defender"
+
+[node name="ResultPanel" type="PanelContainer" parent="Root" unique_id=1511939011]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Root/ResultPanel" unique_id=1207734455]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="ResultLabel" type="Label" parent="Root/ResultPanel/VBoxContainer" unique_id=770535715]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+
+[node name="PlayAgainButton" type="Button" parent="Root/ResultPanel/VBoxContainer" unique_id=1915396085]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Jogar de novo"
+
+[node name="QuitButton" type="Button" parent="Root/ResultPanel/VBoxContainer" unique_id=1617948004]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Sair"

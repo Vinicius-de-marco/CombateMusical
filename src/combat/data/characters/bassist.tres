@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="CombatantStats" format=3 uid="uid://ddor6c45ld5s6"]
+
+[ext_resource type="Script" uid="uid://bg5ypjcq8ehns" path="res://src/combat/data/combatant_stats.gd" id="1_stats"]
+[ext_resource type="Texture2D" uid="uid://ck31m1p8uuex" path="res://assets/sprites/bassist.png" id="2_sprite"]
+
+[resource]
+script = ExtResource("1_stats")
+display_name = "Baixista"
+max_hp = 140
+starting_volume = 15
+atk = 14
+def = 8
+spd = 9
+crit_multiplier = 1.4
+battle_sprite = ExtResource("2_sprite")

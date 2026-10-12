@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="SkillData" format=3 uid="uid://bafty1fr5roko"]
+
+[ext_resource type="Script" uid="uid://pqauqx00aign" path="res://src/combat/data/skill_data.gd" id="1_skill"]
+[ext_resource type="AudioStream" uid="uid://uwk7xva2vebw" path="res://assets/audio/sfx/mosh_pit.wav" id="2_sfx"]
+[ext_resource type="Script" uid="uid://0nqloawkoygs" path="res://src/combat/data/status_effect.gd" id="3_status_script"]
+[ext_resource type="Resource" path="res://src/combat/data/status/bleeding.tres" id="4_effect"]
+
+[resource]
+script = ExtResource("1_skill")
+display_name = "Mosh Pit"
+target_type = 1
+volume_cost = 35
+damage_multiplier = 1.2
+sfx = ExtResource("2_sfx")
+applies_effects = Array[ExtResource("3_status_script")]([ExtResource("4_effect")])
+effect_chance = 0.8

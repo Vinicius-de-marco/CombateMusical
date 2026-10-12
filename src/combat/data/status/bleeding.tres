@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="StatusEffect" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/combat/data/status_effect.gd" id="1_status"]
+
+[resource]
+script = ExtResource("1_status")
+id = &"bleeding"
+display_name = "Sangramento"
+duration_turns = 3
+atk_ratio = 0.0
+def_ratio = 0.0
+dot_ratio = 0.06
+color = Color(0.95, 0.2, 0.25, 1)

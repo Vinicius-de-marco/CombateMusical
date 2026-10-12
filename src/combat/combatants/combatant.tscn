@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://convbcx07us02"]
+
+[ext_resource type="Script" uid="uid://yll6ussq86so" path="res://src/combat/combatants/combatant.gd" id="1_e8kq2"]
+[ext_resource type="Script" path="res://src/combat/combatants/combatant_visuals.gd" id="2_visuals"]
+[ext_resource type="Script" path="res://src/combat/combatants/floating_numbers.gd" id="3_floating"]
+
+[node name="Combatant" type="Node2D"]
+script = ExtResource("1_e8kq2")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+
+[node name="Visuals" type="Node" parent="." node_paths=PackedStringArray("sprite")]
+script = ExtResource("2_visuals")
+sprite = NodePath("../Sprite")
+
+[node name="FloatingNumbers" type="Marker2D" parent="."]
+position = Vector2(0, -28)
+script = ExtResource("3_floating")

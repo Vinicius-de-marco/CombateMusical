@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="CombatantStats" format=3 uid="uid://hlgj6jxx66qk"]
+
+[ext_resource type="Script" uid="uid://bg5ypjcq8ehns" path="res://src/combat/data/combatant_stats.gd" id="1_stats"]
+[ext_resource type="Texture2D" uid="uid://brcujs4x1pvb1" path="res://assets/sprites/guitarist.png" id="2_sprite"]
+
+[resource]
+script = ExtResource("1_stats")
+display_name = "Guitarrista"
+max_hp = 120
+starting_volume = 15
+atk = 18
+def = 6
+spd = 12
+crit_rate = 0.1
+battle_sprite = ExtResource("2_sprite")

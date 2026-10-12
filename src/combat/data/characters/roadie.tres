@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="CombatantStats" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://src/combat/data/combatant_stats.gd" id="1_stats"]
+[ext_resource type="Texture2D" path="res://assets/sprites/roadie.png" id="2_sprite"]
+
+[resource]
+script = ExtResource("1_stats")
+display_name = "Roadie"
+max_hp = 80
+max_volume = 100
+starting_volume = 0
+atk = 15
+def = 3
+spd = 6
+crit_rate = 0.05
+crit_multiplier = 1.5
+battle_sprite = ExtResource("2_sprite")
