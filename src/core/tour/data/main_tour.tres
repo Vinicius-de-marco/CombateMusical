@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="TourData" format=3]
+
+[ext_resource type="Script" path="res://src/core/tour/tour_data.gd" id="1_tour"]
+[ext_resource type="Script" path="res://src/combat/data/encounter_data.gd" id="2_encounter"]
+[ext_resource type="Resource" path="res://src/combat/data/encounters/show_1_bar.tres" id="3_show1"]
+[ext_resource type="Resource" path="res://src/combat/data/encounters/show_2_festival.tres" id="4_show2"]
+[ext_resource type="Resource" path="res://src/combat/data/encounters/show_3_arena.tres" id="5_show3"]
+[ext_resource type="Script" path="res://src/core/tour/reward_data.gd" id="6_reward"]
+[ext_resource type="Resource" path="res://src/core/tour/rewards/new_strings.tres" id="7_new_strings"]
+[ext_resource type="Resource" path="res://src/core/tour/rewards/leather_jacket.tres" id="8_leather_jacket"]
+[ext_resource type="Resource" path="res://src/core/tour/rewards/vip_dressing_room.tres" id="9_vip"]
+[ext_resource type="Resource" path="res://src/core/tour/rewards/energy_drink.tres" id="10_energy"]
+[ext_resource type="Resource" path="res://src/core/tour/rewards/hyped_crowd.tres" id="11_hyped"]
+[ext_resource type="Resource" path="res://src/core/tour/rewards/soundcheck.tres" id="12_soundcheck"]
+
+[resource]
+script = ExtResource("1_tour")
+shows = Array[ExtResource("2_encounter")]([ExtResource("3_show1"), ExtResource("4_show2"), ExtResource("5_show3")])
+rest_heal_ratio = 0.4
+reward_pool = Array[ExtResource("6_reward")]([ExtResource("7_new_strings"), ExtResource("8_leather_jacket"), ExtResource("9_vip"), ExtResource("10_energy"), ExtResource("11_hyped"), ExtResource("12_soundcheck")])
+reward_choices = 3

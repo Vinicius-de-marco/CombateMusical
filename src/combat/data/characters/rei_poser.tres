@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="CombatantStats" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://src/combat/data/combatant_stats.gd" id="1_stats"]
+[ext_resource type="Texture2D" path="res://assets/sprites/rei_poser.png" id="2_sprite"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/rei_attack.wav" id="3_attack_sfx"]
+
+[resource]
+script = ExtResource("1_stats")
+display_name = "Rei Poser"
+max_hp = 260
+max_volume = 100
+starting_volume = 35
+atk = 20
+def = 8
+spd = 9
+crit_rate = 0.1
+crit_multiplier = 1.5
+battle_sprite = ExtResource("2_sprite")
+attack_sfx = ExtResource("3_attack_sfx")

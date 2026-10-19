@@ -7,6 +7,8 @@ signal attack_requested(target: Combatant)
 ## target é null quando a skill não pede seleção (ALL_ENEMIES / SELF).
 signal skill_requested(skill: SkillData, target: Combatant)
 signal defend_requested
+## Botão principal da tela de resultado (ex.: Próximo Show, Tentar de novo).
+signal continue_requested
 signal menu_requested
 signal quit_requested
 
@@ -30,6 +32,7 @@ const MENU_BUTTON_FONT_SIZE: int = 11
 @onready var _cancel_button: Button = %CancelButton
 @onready var _result_panel: Control = %ResultPanel
 @onready var _result_label: Label = %ResultLabel
+@onready var _continue_button: Button = %ContinueButton
 @onready var _menu_button: Button = %MenuButton
 @onready var _quit_button: Button = %QuitButton
 
@@ -48,6 +51,7 @@ func _ready() -> void:
 	_defend_button.pressed.connect(_on_defend_pressed)
 	_skill_back_button.pressed.connect(_show_only.bind(_action_menu, _attack_button))
 	_cancel_button.pressed.connect(_on_cancel_pressed)
+	_continue_button.pressed.connect(continue_requested.emit)
 	_menu_button.pressed.connect(menu_requested.emit)
 	_quit_button.pressed.connect(quit_requested.emit)
 	hide_menus()
@@ -101,11 +105,17 @@ func log_message(text: String) -> void:
 	_log_label.text = "\n".join(_log_lines)
 
 
-func show_result(victory: bool) -> void:
+## continue_text vazio esconde o botão principal (fica só Voltar ao Menu / Sair).
+## show_menu = false esconde Voltar ao Menu (ex.: a recompensa ainda não foi escolhida).
+func show_result(title: String, continue_text: String = "", show_menu: bool = true) -> void:
 	hide_menus()
-	_result_label.text = "VITÓRIA!" if victory else "DERROTA..."
+	_result_label.text = title
+	_continue_button.text = continue_text
+	_continue_button.visible = not continue_text.is_empty()
+	_menu_button.visible = show_menu or not _continue_button.visible
 	_result_panel.show()
-	_menu_button.grab_focus()
+	if is_inside_tree():
+		(_continue_button if _continue_button.visible else _menu_button).grab_focus()
 
 
 func _open_skill_menu() -> void:

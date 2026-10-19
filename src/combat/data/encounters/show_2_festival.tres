@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="EncounterData" format=3]
+
+[ext_resource type="Script" path="res://src/combat/data/encounter_data.gd" id="1_encounter"]
+[ext_resource type="PackedScene" path="res://src/combat/combatants/characters/poser_a.tscn" id="2_poser_a"]
+[ext_resource type="PackedScene" path="res://src/combat/combatants/characters/poser_b.tscn" id="3_poser_b"]
+[ext_resource type="PackedScene" path="res://src/combat/combatants/characters/roadie.tscn" id="4_roadie"]
+
+[resource]
+script = ExtResource("1_encounter")
+venue_name = "Festival Underground"
+tagline = "O roadie da banda rival quer sabotar o seu som."
+enemies = Array[PackedScene]([ExtResource("2_poser_a"), ExtResource("3_poser_b"), ExtResource("4_roadie")])
+positions = PackedVector2Array(440, 130, 460, 210, 540, 170)

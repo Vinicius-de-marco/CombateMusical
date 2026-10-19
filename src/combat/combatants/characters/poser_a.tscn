@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" uid="uid://convbcx07us02" path="res://src/combat/combatants/combatant.tscn" id="1_base"]
+[ext_resource type="Resource" path="res://src/combat/data/characters/poser_a.tres" id="2_stats"]
+[ext_resource type="Script" path="res://src/combat/data/skill_data.gd" id="3_skill"]
+[ext_resource type="Resource" path="res://src/combat/data/skills/ear_split.tres" id="4_ear_split"]
+
+[node name="PoserA" instance=ExtResource("1_base")]
+base_stats = ExtResource("2_stats")
+team = 1
+skills = Array[ExtResource("3_skill")]([ExtResource("4_ear_split")])

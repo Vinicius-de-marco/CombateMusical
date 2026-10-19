@@ -25,6 +25,10 @@ extends Resource
 ## Sprite de batalha (lido pelo componente CombatantVisuals).
 @export var battle_sprite: Texture2D
 
+@export_group("Audio")
+## Som do ataque básico. Vazio = som padrão da batalha (BattleScene.attack_sfx).
+@export var attack_sfx: AudioStream
+
 ## Valores de runtime (não exportados: não vão para o .tres).
 var current_hp: int = 0
 var current_volume: int = 0

@@ -1,7 +1,11 @@
 class_name BattleScene
 extends Node2D
 ## Orquestra a batalha: liga TurnManager, combatentes e HUD.
-## Combatentes são lidos dos filhos de Party (heróis) e Enemies (inimigos).
+## Heróis são os filhos de Party; inimigos vêm do show atual da turnê (ou de
+## default_encounter quando a cena roda sozinha) e são instanciados em Enemies.
+
+## Usada quando um EncounterData não define positions (ou define menos que inimigos).
+const DEFAULT_ENEMY_POSITIONS: Array[Vector2] = [Vector2(440, 130), Vector2(460, 210), Vector2(540, 170)]
 
 ## Pausa entre ações para o jogador conseguir ler o log.
 @export_range(0.0, 3.0, 0.1) var action_delay: float = 0.8
@@ -11,7 +15,12 @@ extends Node2D
 ## A IA só usa skill de cura se algum alvo estiver abaixo desta fração do HP.
 @export_range(0.0, 1.0, 0.05) var enemy_heal_threshold: float = 0.6
 
+## Encontro usado sem turnê ativa (ex.: rodar só esta cena no editor).
+@export var default_encounter: EncounterData
+
 @export_file("*.tscn") var main_menu_scene: String = "res://src/scenes/main_menu/main_menu.tscn"
+@export_file("*.tscn") var show_intro_scene: String = "res://src/scenes/tour/show_intro.tscn"
+@export_file("*.tscn") var reward_scene: String = "res://src/scenes/tour/reward_screen.tscn"
 
 @export_group("Audio")
 @export var battle_bgm: AudioStream = preload("res://assets/audio/bgm/battle_theme.wav")
@@ -24,6 +33,9 @@ extends Node2D
 @onready var _party: Node2D = $Party
 @onready var _enemies: Node2D = $Enemies
 
+var _heroes: Array[Combatant] = []
+var _victory: bool = false
+
 
 func _ready() -> void:
 	_turn_manager.turn_started.connect(_on_turn_started)
@@ -31,25 +43,56 @@ func _ready() -> void:
 	_hud.attack_requested.connect(_on_attack_requested)
 	_hud.skill_requested.connect(_on_skill_requested)
 	_hud.defend_requested.connect(_on_defend_requested)
+	_hud.continue_requested.connect(_on_continue_requested)
 	_hud.menu_requested.connect(_on_menu_requested)
 	_hud.quit_requested.connect(_on_quit_requested)
 
-	var heroes: Array[Combatant] = _collect_combatants(_party, Combatant.Team.PLAYER)
+	var encounter: EncounterData = TourManager.get_current_show() if TourManager.is_active() else default_encounter
+	_spawn_enemies(encounter)
+	_heroes = _collect_combatants(_party, Combatant.Team.PLAYER)
+	# Antes dos cards: eles leem o HP/Volume atual ao serem criados.
+	TourManager.prepare_party(_heroes)
 	var combatants: Array[Combatant] = []
-	combatants.append_array(heroes)
+	combatants.append_array(_heroes)
 	combatants.append_array(_collect_combatants(_enemies, Combatant.Team.ENEMY))
-	_hud.setup_party(heroes)
+	_hud.setup_party(_heroes)
+	if encounter != null:
+		_hud.log_message(_show_title(encounter))
 	for combatant: Combatant in combatants:
 		combatant.died.connect(_on_combatant_died)
 		combatant.status_applied.connect(_on_status_applied)
 		combatant.status_expired.connect(_on_status_expired)
 		combatant.status_ticked.connect(_on_status_ticked)
+	# Depois dos sinais: o log mostra o buff de recompensa em cada herói.
+	TourManager.apply_show_effects(_heroes)
 
 	if combatants.is_empty():
 		push_error("BattleScene: nenhum combatente em Party/Enemies.")
 		return
 	AudioManager.play_bgm(battle_bgm)
 	_turn_manager.start_battle(combatants)
+
+
+func _spawn_enemies(encounter: EncounterData) -> void:
+	if encounter == null:
+		push_error("BattleScene: sem turnê ativa e sem default_encounter.")
+		return
+	for i: int in encounter.enemies.size():
+		var packed: PackedScene = encounter.enemies[i]
+		if packed == null:
+			continue
+		var enemy: Node2D = packed.instantiate() as Node2D
+		if i < encounter.positions.size():
+			enemy.position = encounter.positions[i]
+		else:
+			enemy.position = DEFAULT_ENEMY_POSITIONS[mini(i, DEFAULT_ENEMY_POSITIONS.size() - 1)]
+		_enemies.add_child(enemy)
+
+
+func _show_title(encounter: EncounterData) -> String:
+	if TourManager.is_active():
+		return "Show %d/%d: %s" % [TourManager.get_show_number(), TourManager.get_show_count(), encounter.venue_name]
+	return encounter.venue_name
 
 
 func _collect_combatants(container: Node, team: Combatant.Team) -> Array[Combatant]:
@@ -83,7 +126,7 @@ func _run_enemy_turn(enemy: Combatant) -> void:
 		var target: Combatant = heroes.pick_random()
 		if not _try_enemy_skill(enemy, target):
 			_log_attack(enemy, target, enemy.basic_attack(target), "ataca")
-			AudioManager.play_sfx(attack_sfx, 0.1)
+			AudioManager.play_sfx(_attack_sfx_of(enemy), 0.1)
 	_finish_turn(enemy)
 
 
@@ -156,8 +199,13 @@ func _on_attack_requested(target: Combatant) -> void:
 		_hud.show_action_menu(hero, _opponents_of(hero))
 		return
 	_log_attack(hero, target, result, "ataca")
-	AudioManager.play_sfx(attack_sfx, 0.1)
+	AudioManager.play_sfx(_attack_sfx_of(hero), 0.1)
 	_finish_turn(hero)
+
+
+## Som próprio do personagem (ex.: microfone do Rei Poser) ou o padrão da batalha.
+func _attack_sfx_of(actor: Combatant) -> AudioStream:
+	return actor.stats.attack_sfx if actor.stats.attack_sfx != null else attack_sfx
 
 
 func _on_skill_requested(skill: SkillData, target: Combatant) -> void:
@@ -232,12 +280,33 @@ func _on_status_ticked(combatant: Combatant, effect: StatusEffect, damage: int) 
 
 
 func _on_battle_ended(victory: bool) -> void:
-	_hud.show_result(victory)
+	_victory = victory
+	var in_tour: bool = TourManager.is_active()
+	if not victory:
+		# Tentar de novo repete o show com os vitais do começo dele (nada é salvo na derrota).
+		_hud.show_result("DERROTA...", "Tentar de novo" if in_tour else "")
+	elif in_tour:
+		if TourManager.complete_show(_heroes):
+			# Voltar ao Menu só depois da recompensa: aqui o único caminho é escolhê-la.
+			var reward_pending: bool = TourManager.has_pending_reward()
+			_hud.show_result("VITÓRIA!", "Escolher Recompensa" if reward_pending else "Próximo Show", not reward_pending)
+		else:
+			_hud.show_result("TURNÊ COMPLETA!")
+	else:
+		_hud.show_result("VITÓRIA!")
 	AudioManager.stop_bgm(1.0)
 	AudioManager.play_sfx(victory_sfx if victory else defeat_sfx)
 
 
+func _on_continue_requested() -> void:
+	if _victory:
+		get_tree().change_scene_to_file(reward_scene if TourManager.has_pending_reward() else show_intro_scene)
+	else:
+		get_tree().reload_current_scene()
+
+
 func _on_menu_requested() -> void:
+	TourManager.end_tour()
 	get_tree().change_scene_to_file(main_menu_scene)
 
 

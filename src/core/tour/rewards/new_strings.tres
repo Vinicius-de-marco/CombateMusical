@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="RewardData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/core/tour/reward_data.gd" id="1_reward"]
+
+[resource]
+script = ExtResource("1_reward")
+id = &"new_strings"
+display_name = "Cordas Novas"
+description = "+2 ATK para a banda pelo resto da turnê."
+kind = 0
+atk_bonus = 2

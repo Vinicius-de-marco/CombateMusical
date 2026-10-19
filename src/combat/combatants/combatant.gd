@@ -62,6 +62,17 @@ func is_alive() -> bool:
 	return stats != null and stats.current_hp > 0
 
 
+## Vitais vindos de fora da batalha (ex.: turnê). Chame antes da luta começar.
+## HP mínimo 1: quem entra na batalha está de pé.
+func set_vitals(hp: int, volume: int) -> void:
+	if stats == null:
+		return
+	stats.current_hp = clampi(hp, 1, stats.max_hp)
+	stats.current_volume = clampi(volume, 0, stats.max_volume)
+	hp_changed.emit(stats.current_hp, stats.max_hp)
+	volume_changed.emit(stats.current_volume, stats.max_volume)
+
+
 ## Chamado pelo TurnManager quando o turno deste combatente começa.
 ## Aplica os DoTs; o combatente pode morrer aqui (o TurnManager verifica).
 func begin_turn() -> void:
